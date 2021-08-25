@@ -7,7 +7,7 @@
         >
           <q-card-section>
             <q-avatar size="100px" class="absolute-center shadow-10">
-              <img class="quasar-logo__img" src="rabbit.png" />
+              <img class="quasar-logo__img" src="quasar.jpg" />
             </q-avatar>
           </q-card-section>
           <q-card-section>
