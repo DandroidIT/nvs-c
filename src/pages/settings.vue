@@ -1,20 +1,20 @@
 <template>
   <q-page class="bg-primary q-pa-sm">
     <q-dialog
-      v-model="isLoading"
+      v-model="state.isawait"
       persistent
       transition-show="scale"
       transition-hide="scale"
     >
       <q-spinner-puff color="red" size="20em" />
     </q-dialog>
-    <q-card dark="" v-if="!userAuthStatus.success">
+    <q-card dark="" v-if="!state.success">
       <q-card-section>
         <q-icon name="mdi-alert" color="red" size="34px"></q-icon>
       </q-card-section>
 
       <q-card-section class="q-pt-none">
-        {{ userAuthStatus.error }}
+        {{ state.msgError }}
       </q-card-section>
     </q-card>
     <q-card dark="" class="bg-transparent no-shadow no-border">
@@ -80,7 +80,7 @@
                   readonly=""
                   dark=""
                   filled
-                  v-model="account.username"
+                  v-model="userAccount.newusername"
                   label="Username"
                   lazy-rules
                   :rules="[(val) => !!val || 'Field is required']"
@@ -91,7 +91,7 @@
                   clearable
                   dark=""
                   filled
-                  v-model="account.password"
+                  v-model="userAccount.password"
                   label="Password"
                   lazy-rules
                   :rules="[(val) => !!val || 'Field is required']"
@@ -102,7 +102,7 @@
                   clearable
                   dark=""
                   filled
-                  v-model="account.newpassword"
+                  v-model="userAccount.newpassword"
                   label="New Password"
                   lazy-rules
                   :rules="[(val) => !!val || 'Field is required']"
@@ -113,12 +113,12 @@
                   clearable
                   dark=""
                   filled
-                  v-model="account.checknewpassword"
+                  v-model="userAccount.checknewpassword"
                   label="Repeat New Password"
                   lazy-rules
                   :rules="[
                     (val) => !!val || 'Field is required',
-                    (val) => val === account.newpassword || 'No mach',
+                    (val) => val === userAccount.newpassword || 'No mach',
                   ]"
                 />
               </div>
@@ -126,7 +126,7 @@
                 <q-btn
                   label="Save"
                   type="button"
-                  @click="clickSaveUser"
+                  @click="saveUser"
                   color="orange"
                 />
               </div></div
@@ -139,28 +139,27 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { settingsCtrlPage } from '../core/ctrlPage/settingsCtrlPage';
+
+import mSetttings from '../core/model/msettings';
 export default defineComponent({
-  name: 'Settings',
+  name: 'pSettings',
   setup() {
     const {
       tabN,
-      account,
-      clickSaveUser,
-      userAuthStatus,
-      blockIpPublic,
-      getIpBlock,
+      userAccount,
+      saveUser,
+      state,
+      ipPublicBlock,
+      clickipPublicBlock,
       notifyAlarm,
-    } = settingsCtrlPage();
-    const clickipPublicBlock = () => {
-      void getIpBlock();
-    };
+    } = mSetttings();
+
     return {
       tabN,
-      account,
-      clickSaveUser,
-      userAuthStatus: userAuthStatus,
-      ipPublicBlock: blockIpPublic,
+      userAccount,
+      saveUser,
+      state,
+      ipPublicBlock,
       clickipPublicBlock,
       notifyAlarm,
     };

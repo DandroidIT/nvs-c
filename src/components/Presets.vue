@@ -41,6 +41,7 @@
 import { defineComponent, ref, watch } from 'vue';
 export default defineComponent({
   name: 'ComponentPresets',
+  emits: ['clickpreset'],
   setup(props, { emit }) {
     const preset = ref('1');
     const listPreset = ref<Array<string>>([]);

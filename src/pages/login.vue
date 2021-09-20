@@ -15,6 +15,9 @@
               <div class="col text-h6 ellipsis">Log in</div>
             </div>
           </q-card-section>
+          <q-card-section v-show="!state.success">
+            {{ state.msgError }}
+          </q-card-section>
           <q-card-section>
             <q-form ref="frmlogin" class="q-gutter-md">
               <q-input
@@ -80,13 +83,13 @@
 </style>
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { loginCtrl } from '../core/ctrlPage/loginCtrlPage';
-
+import mlogin from '../core/model/mlogin';
+import { useRouter } from 'vue-router';
 export default defineComponent({
-  name: 'PageLogin',
-  setup() {
-    const { userForm, sendlogin, status, userState } = loginCtrl();
-    return { userForm, sendlogin, status, userState };
+  name: 'pLogin',
+  setup(/* props: any, context: SetupContext */) {
+    const { userForm, sendlogin, state } = mlogin(useRouter());
+    return { sendlogin, userForm, state };
   },
 });
 </script>

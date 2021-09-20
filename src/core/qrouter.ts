@@ -1,7 +1,14 @@
 
 import { useRouter } from 'vue-router'
-
-export const useRouterCustom = () => {
+export default {
+  setup() {
+    const _router = useRouter()
+    return {
+      _router
+    }
+  }
+}
+/* export const useRouterCustom = () => {
   const router = useRouter();
 
   const goToPage = (path = '/', pforce = false) => {
@@ -10,8 +17,4 @@ export const useRouterCustom = () => {
   return {
     goToPage
   }
-}
-
-export const useApp = () => {
-  /** */
-}
+} */

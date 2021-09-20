@@ -3,6 +3,7 @@
 node_modules
 yarn.lock
 ssl
+*.zip
 # Quasar core related directories
 .quasar
 /dist

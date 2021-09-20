@@ -1,4 +1,4 @@
-import { route } from 'quasar/wrappers';
+//import { route } from 'quasar/wrappers';
 import {
   createMemoryHistory,
   createRouter,
@@ -7,7 +7,9 @@ import {
 } from 'vue-router';
 import routes from './routes';
 
-import { userAuth } from '../core/store/auth.store';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+//import { userAuth } from '../core/store/auth.store';
+import AuthCS from '../core/ctrl.store/auth.ctrl.store'
 /*
  * If not building with SSR mode, you can
  * directly export the Router instantiation;
@@ -16,7 +18,7 @@ import { userAuth } from '../core/store/auth.store';
  * async/await or return a Promise which resolves
  * with the Router instance.
  */
-export default route(function (/* { store, ssrContext } */) {
+export default (function (/* { store, ssrContext } */) {
 
   const createHistory = process.env.SERVER
     ? createMemoryHistory
@@ -34,11 +36,16 @@ export default route(function (/* { store, ssrContext } */) {
     ),
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Router.beforeEach((to, from, next) => {
-    const { userState } = userAuth()
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { userState } = AuthCS() //const userState = userAuth().userState
+    //console.log('Router.beforeEach userState.isAuth:', userState.isAuth, 'userState.isAuthWss:', userState.isAuthWss);
     if (to.matched.some(record => record.meta.requiresAuth)) {
+      //console.log('check userState.isAuth:', userState.isAuth, 'userState.isAuthWss:', userState.isAuthWss);
       if (userState.isAuth === false || userState.isAuthWss === false) {
-        console.log('Router.beforeEach userState.isAuth:', userState.isAuth, 'userState.isAuthWss:', userState.isAuthWss);
+        //console.log('Router.beforeEach userState.isAuth:', userState.isAuth, 'userState.isAuthWss:', userState.isAuthWss);
         next({
           path: '/login',
         })
@@ -48,6 +55,7 @@ export default route(function (/* { store, ssrContext } */) {
     } else {
       next()
     }
+    /* next() */
   })
   return Router;
 });

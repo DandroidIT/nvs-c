@@ -1,25 +1,51 @@
 <template>
   <q-page class="bg-primary q-pa-sm">
     <q-dialog
-      v-model="isLoading"
+      v-model="state.isawait"
       persistent
       transition-show="scale"
       transition-hide="scale"
     >
       <q-spinner-puff color="red" size="20em" />
     </q-dialog>
-    <q-card dark="" v-if="!status.success">
+    <q-card dark="" v-if="!state.success">
       <q-card-section>
         <q-icon name="mdi-alert" color="red" size="34px"></q-icon>
       </q-card-section>
 
       <q-card-section class="q-pt-none">
-        {{ status.error }}
+        {{ state.error }}
       </q-card-section>
     </q-card>
-    <div class="row">
-      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+      <div v-if="cam" class="row">
+        {{ `${cam.name}` }}
+      </div>
+    </div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+      <canvas class="full-width full-height" id="videostream"></canvas>
+    </div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+      <q-item dense="">
+        <q-item-section avatar>
+          <q-icon color="orange" name="volume_up" />
+        </q-item-section>
+        <q-item-section>
+          <q-slider
+            v-model="JSMpegPlayer.volume"
+            :min="0"
+            :max="100"
+            label
+            color="orange"
+          />
+        </q-item-section>
+      </q-item>
+    </div>
+
+    <!--<div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <q-knob
+          v-if="JSMpegPlayer"
           show-value
           class="text-white q-ma-md"
           v-model="JSMpegPlayer.volume"
@@ -30,20 +56,13 @@
           track-color="transparent"
         >
           <q-icon name="volume_up" />
-          {{ volume }}
-        </q-knob>
+          {{ JSMpegPlayer.volume }}
+        </q-knob> -->
+    <!-- </div>
+      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6"> 
       </div>
-      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6"></div>
-    </div>
+    </div>-->
 
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-      <canvas
-        width="2560"
-        height="1440"
-        class="full-width full-height"
-        id="videostream"
-      ></canvas>
-    </div>
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
       <q-card class="bg-primary">
         <q-tabs
@@ -69,7 +88,7 @@
             <joy-pad @directioncam="clickMove"></joy-pad>
           </q-tab-panel>
           <q-tab-panel name="presets">
-            <presets @clickpreset="clickPresets" />
+            <presets @clickpreset="clickMove" />
           </q-tab-panel>
           <q-tab-panel name="setting">
             <div class="row justify-center">
@@ -138,40 +157,35 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import { camCtrlPage } from '../core/ctrlPage/camCtrlPage';
+import { defineComponent } from 'vue';
+import mCams from '../core/model/mcams';
 import joyPad from 'components/Joypad.vue';
 import presets from 'components/Presets.vue';
 
 export default defineComponent({
-  name: 'Cam',
+  name: 'pCam',
   components: { joyPad, presets },
   setup() {
     const {
-      loadPage,
-      clickMove,
-      clickPresets,
-      status,
+      state: state,
+      tab,
       JSMpegPlayer,
       cam,
-      isLoading,
-      changeSetting,
       screenshots,
-    } = camCtrlPage();
-    loadPage();
-
-    const tab = ref('home');
+      getScreenshot,
+      clickMove,
+      changeSetting,
+    } = mCams();
 
     return {
-      JSMpegPlayer,
-      cam: cam.val,
-      screenshots,
-      clickMove,
       tab,
+      state,
+      JSMpegPlayer,
+      cam: cam,
+      screenshots,
+      getScreenshot,
+      clickMove,
       changeSetting,
-      clickPresets,
-      status,
-      isLoading,
     };
   },
 });

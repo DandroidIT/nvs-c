@@ -7,7 +7,7 @@
       <q-toolbar>
         <q-btn flat round dense icon="menu" @click="leftDrawer = !leftDrawer" />
         <q-toolbar-title>
-          NVS-C <span class="text-caption"> {{ appVersion }}</span>
+          {{ appTitle }} <span class="text-caption"> {{ appVersion }}</span>
         </q-toolbar-title>
         <q-btn round flat icon="logout" @click="logout" />
       </q-toolbar>
@@ -30,16 +30,23 @@
 import { defineComponent, ref } from 'vue';
 import Menu from 'components/Menu.vue';
 import { base } from 'src/core/setting';
-import { userAuth } from '../core/store/auth.store';
+import { useRouter } from 'vue-router';
+import AuthCS from '../core/ctrl.store/auth.ctrl.store';
 export default defineComponent({
   name: 'LayoutMain',
   components: { Menu },
   setup() {
     const appVersion = process.env.VERSION;
+    const appTitle = base.title;
     const menuLink = base.menu;
     const leftDrawer = ref(false);
-    const { logout } = userAuth();
-    return { appVersion, leftDrawer, menuLink, logout };
+    const router = useRouter();
+
+    const logout = async () => {
+      await AuthCS().postLogout();
+      void router.push({ path: '/login' });
+    };
+    return { appVersion, appTitle, leftDrawer, menuLink, logout };
   },
 });
 </script>

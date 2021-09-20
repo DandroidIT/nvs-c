@@ -28,6 +28,10 @@ class websocket_wrapper {
                     const { type, payload } = JSON.parse(msg.data)
                     this.dispatch(type, payload)
                 }
+                this.conn.onclose = (ev: CloseEvent) => {
+                    console.log('onclose the socket ev:', ev);
+                    this._isconnect = false
+                }
             } catch (error) {
                 rej(error)
             }
@@ -53,6 +57,7 @@ class websocket_wrapper {
         }
         const sendJSON = JSON.stringify({ type: event_name, payload: msg })
         this.conn.send(sendJSON)
+        //console.log('SOCKET MESSAGE TO SERVER:', sendJSON)
     }
 
     /* sendraw (event_name: string, data: string | ArrayBufferLike | Blob | ArrayBufferView) {
@@ -61,8 +66,10 @@ class websocket_wrapper {
     } */
 
     close() {
-        if (this._isconnect)
+        if (this._isconnect) {
             this.conn.close()
+        }
+
     }
 }
 

@@ -1,5 +1,5 @@
 const base = {
-  title: 'NVS Client',
+  title: 'NVS-C',
   http: `${window.location.protocol}//${window.location.hostname}:4005`,
   wss: `wss://${window.location.hostname}:4005`,
   cookie_base: 'nvs_base',
@@ -18,6 +18,11 @@ const base = {
     caption: '',
     icon: 'mdi-view-dashboard-outline',
     link: '/videowall'
+  }, {
+    title: 'Calendar Alarms',
+    caption: '',
+    icon: 'mdi-home-alert-outline',
+    link: '/calendaralarms'
   }, {
     title: 'Settings',
     caption: '',

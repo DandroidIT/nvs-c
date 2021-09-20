@@ -7,28 +7,9 @@ class helpers {
     } else if (format === 'data&time') {
       return `${dataVal.split('T')[0]} ${dataVal.split('T')[1].replace('Z', '')}`
     }
+    return ''
   }
-
   static waitFor(delay: number) { return new Promise(resolve => setTimeout(resolve, delay)) };
 }
 
-import { Notify } from 'quasar'
-class helpQuasar {
-  static Notify(msg: string) {
-    if (!msg)
-      return
-    Notify.create({
-      icon: 'mdi-information-variant',
-      progress: true,
-      message: msg,
-      position: 'top',
-      timeout: 1500,
-      textColor: 'white',
-      color: '',
-      actions: [{ icon: 'close', color: 'white' }]
-    })
-  }
-}
-
-
-export { helpers, helpQuasar }
+export { helpers }

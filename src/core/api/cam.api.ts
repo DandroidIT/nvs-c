@@ -4,9 +4,9 @@ import apiWs from './ws.api'
 
 
 class CamService {
-  getCams(): Promise<[icam]> {
+  getCams(): Promise<iresponseServer<icam[]>> {
     return new Promise((res) => {
-      const _cb = (data: [icam]) => {
+      const _cb = (data: iresponseServer<icam[]>) => {
         res(data)
       }
       apiWs.bindAndsend({ name: eCamsApiname.Cam_List, cb: _cb })
@@ -17,9 +17,7 @@ class CamService {
   _objMove(idcam: string, direction: string, timeout = 100, presetN = '0'): string {
     if (direction === 'STOP') {
       return JSON.stringify({ type: eCamsApiname.Cam_Controll, payload: { tagcam: idcam, cmd: 'move_stop' } })
-    }/*  else if (direction === 'screenshot') {
-      return JSON.stringify({ type: 'controlcam', payload: { tagcam: idcam, cmd: 'screenshot' } })
-    } */
+    }
 
     const ObjSendMove = {
       tagcam: idcam,

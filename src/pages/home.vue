@@ -1,24 +1,29 @@
 <template>
   <q-page class="bg-primary q-pa-sm">
     <q-dialog
-      v-model="status.isawait"
+      v-model="state.isawait"
       persistent
       transition-show="scale"
       transition-hide="scale"
     >
       <q-spinner-puff color="red" size="20em" />
     </q-dialog>
+
     <q-card dark="" class="bg-transparent no-shadow no-border">
-      <q-card dark="" v-if="!status.success">
+      <q-card dark="" v-if="!state.success">
         <q-card-section>
           <q-icon name="mdi-alert" color="red" size="34px"></q-icon>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-          {{ status.error }}
+          {{ state.msgError }}
         </q-card-section>
       </q-card>
-      <q-item v-show="!cams.list?.length" dark="" class="q-pa-none q-ml-xs">
+      <q-item
+        v-show="cams.list?.length === 0"
+        dark=""
+        class="q-pa-none q-ml-xs"
+      >
         <q-item-section side>
           <q-btn
             label="Goto Radar"
@@ -83,20 +88,15 @@
 </template>
 
 <script lang="ts">
-import { homeCtrlPage } from '../core/ctrlPage/homeCtrlPage';
-
+import mhome from '../core/model/mhome';
+import { useRouter } from 'vue-router';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'Dashboard',
+  name: 'pDashboard',
   setup() {
-    const { clickgotoCam, status, clickDeleteCam, cams } = homeCtrlPage();
-    return {
-      clickgotoCam,
-      status,
-      cams,
-      clickDeleteCam,
-    };
+    const { state, cams, clickgotoCam, clickDeleteCam } = mhome(useRouter());
+    return { state, cams, clickgotoCam, clickDeleteCam };
   },
 });
 </script>

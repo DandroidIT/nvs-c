@@ -1,7 +1,7 @@
 <template>
   <q-page class="bg-primary q-pa-sm">
     <q-dialog
-      v-model="status.isawait"
+      v-model="state.isawait"
       persistent
       transition-show="scale"
       transition-hide="scale"
@@ -9,13 +9,13 @@
       <q-spinner-puff color="red" size="20em" />
       <!--  -->
     </q-dialog>
-    <q-card dark="" v-if="!status.success">
+    <q-card dark="" v-if="!state.success">
       <q-card-section>
         <q-icon name="mdi-alert" color="red" size="34px"></q-icon>
       </q-card-section>
 
       <q-card-section class="q-pt-none">
-        {{ status.error }}
+        {{ state.msgError }}
       </q-card-section>
     </q-card>
     <q-stepper
@@ -44,7 +44,7 @@
                 flat
                 padding="xs"
                 class="full-width text-capitalize"
-                @mousedown="clickProbe()"
+                @mousedown="startRadar()"
               ></q-btn>
             </div>
           </q-responsive>
@@ -150,21 +150,20 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { setupCtrlPage } from '../core/ctrlPage/setupCtrlPage';
+import mSetup from '../core/model/msetup';
 export default defineComponent({
-  name: 'PageSetup',
+  name: 'pSetup',
   setup() {
-    const { stepN, probeCams, clickProbe, navTabs, clickSave, status } =
-      setupCtrlPage();
-    stepN.value = 1;
+    const { stepN, probeCams, state, navTabs, startRadar, saveCamProbe } =
+      mSetup();
 
     return {
       stepN,
-      clickProbe,
+      startRadar,
+      state,
       navTabs,
       probeCams,
-      clickSave,
-      status,
+      clickSave: saveCamProbe,
     };
   },
 });

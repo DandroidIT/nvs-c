@@ -143,6 +143,7 @@
 import { defineComponent } from 'vue';
 export default defineComponent({
   name: 'ComponentJoyPad',
+  emits: ['directioncam'],
   setup(props, { emit }) {
     const clickCmd = (direction: string) => {
       emit('directioncam', direction);

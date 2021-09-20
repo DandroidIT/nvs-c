@@ -25,6 +25,10 @@ class apiWs {
     })
   }
 
+  disconnect() {
+    this.skt.close()
+  }
+
   bindAndsend(bind: { name: string, cb: (data: any) => any }, send?: { name?: string, msg: any }) {
     this.skt.bind(bind.name, bind.cb)
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
