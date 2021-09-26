@@ -24,18 +24,9 @@ export const mCams = ( /* router?: Router -  props: any, context: SetupContext *
   const _player = reactive({ val: { destroy: () => undefined, volume: 10 } });
   const id = ref('')
   const _tab = ref('home');
+  let canvas: HTMLCanvasElement | null
+  let videocam: HTMLVideoElement | null
   /* const _setup = () => {} */
-
-  const _loadPlayer = (id: string) => { // prototype - passare in componenete
-    const canvas: HTMLElement | null = document.getElementById('videostream');
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
-    _player.val = new JSMpeg.Player(urlplayer(id), {
-      canvas: canvas,
-      protocols: userState.user?.token,
-    });
-    _player.val.volume = 10
-  }
-
 
   onMounted(() => {
     const route = useRoute();
@@ -53,6 +44,64 @@ export const mCams = ( /* router?: Router -  props: any, context: SetupContext *
       console.log('error in camview beforeDestroy:', error);
     }
   });
+
+  const _loadPlayer = (id: string) => {
+    canvas = document.getElementById('videostream') as HTMLCanvasElement;
+    videocam = document.getElementById('videocam') as HTMLVideoElement;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+    _player.val = new JSMpeg.Player(urlplayer(id), {
+      canvas: canvas,
+      protocols: userState.user?.token,
+      onSourceEstablished: (/* source: any */) => {
+        _initHtmlVideo()
+      },
+      /* onStalled: (player: any) => {}, */
+      /* onSourceCompleted: (source: any) => {}, */
+    })
+    _player.val.volume = 10
+  }
+
+
+  const _initHtmlVideo = () => {
+    try {
+      if (canvas) {
+        /*   const ctx = canvas.getContext('experimental-webgl')*/
+        /* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
+        const stream = canvas.captureStream()
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        if (videocam) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          videocam.srcObject = stream
+          canvas.style.display = 'none'
+          canvas.remove()
+        }
+      }
+    } catch (error) {
+
+    }
+
+
+  }
+
+  const _clickPiP = async () => {
+    try {
+      if (document.pictureInPictureElement) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        await document.exitPictureInPicture()
+      } else {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        await videocam?.requestPictureInPicture()
+      }
+    } catch (error) {
+      QNotify('Picture-in-Picture Web API is not supported')
+    }
+  }
+
+  const _volume = () => {
+    _player.val.volume = _player.val.volume === 0 ? 10 : 0
+
+  }
+
 
 
   const clickMove = async (direction: string, presetN?: string) => {
@@ -81,7 +130,8 @@ export const mCams = ( /* router?: Router -  props: any, context: SetupContext *
     state: readonly(_state), tab: _tab,
     JSMpegPlayer: computed(() => _player.val),
     screenshots, cam: computed(() => _cam.val),
-    getScreenshot, clickMove, changeSetting
+    getScreenshot, clickMove, changeSetting,
+    clickPiP: _clickPiP, volume: _volume,
   }
 
 }

@@ -5,3 +5,20 @@ declare namespace NodeJS {
     VUE_ROUTER_BASE: string | undefined;
   }
 }
+
+interface HTMLCanvasElement {
+  captureStream(frameRate?: number): MediaStream;
+}
+
+interface HTMLVideoElement {
+  requestPictureInPicture(): Promise<PictureInPictureWindow>
+}
+
+interface DocumentOrShadowRoot {
+  readonly pictureInPictureElement: Element | null;
+  exitPictureInPicture(): Promise<void>;
+}
+
+interface Document {
+  exitPictureInPicture(): Promise<void>
+}

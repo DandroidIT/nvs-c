@@ -23,12 +23,26 @@
       </div>
     </div>
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+      <video
+        id="videocam"
+        style=""
+        class="full-width full-height"
+        controls
+        autoplay
+      ></video>
       <canvas class="full-width full-height" id="videostream"></canvas>
     </div>
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
       <q-item dense="">
-        <q-item-section avatar>
-          <q-icon color="orange" name="volume_up" />
+        <q-item-section side avatar>
+          <q-btn
+            :icon="
+              JSMpegPlayer.volume === 0 ? 'mdi-volume-off' : 'mdi-volume-high'
+            "
+            color="orange"
+            flat
+            @click="volume"
+          ></q-btn>
         </q-item-section>
         <q-item-section>
           <q-slider
@@ -39,29 +53,16 @@
             color="orange"
           />
         </q-item-section>
+        <q-item-section side>
+          <q-btn
+            icon="mdi-picture-in-picture-bottom-right"
+            color="orange"
+            flat
+            @click="clickPiP"
+          ></q-btn>
+        </q-item-section>
       </q-item>
     </div>
-
-    <!--<div class="row">
-      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <q-knob
-          v-if="JSMpegPlayer"
-          show-value
-          class="text-white q-ma-md"
-          v-model="JSMpegPlayer.volume"
-          size="60px"
-          :thickness="0.2"
-          color="orange"
-          center-color="grey-8"
-          track-color="transparent"
-        >
-          <q-icon name="volume_up" />
-          {{ JSMpegPlayer.volume }}
-        </q-knob> -->
-    <!-- </div>
-      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6"> 
-      </div>
-    </div>-->
 
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
       <q-card class="bg-primary">
@@ -168,6 +169,8 @@ export default defineComponent({
   setup() {
     const {
       state: state,
+      clickPiP,
+      volume,
       tab,
       JSMpegPlayer,
       cam,
@@ -178,8 +181,10 @@ export default defineComponent({
     } = mCams();
 
     return {
-      tab,
       state,
+      volume,
+      clickPiP,
+      tab,
       JSMpegPlayer,
       cam: cam,
       screenshots,

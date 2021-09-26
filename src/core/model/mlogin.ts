@@ -30,7 +30,8 @@ export const mlogin = (router: Router /* props: any, context: SetupContext */) =
     } else {
       _state.isawait = true
       void await postLogin(_userForm.username, _userForm.password)
-      _state.success = true
+      _state.success = userState.isAuth
+      _state.msgError = userState.error ? userState.error : ''
       _state.isawait = false
       void _router.push({ path: '/' })
     }
