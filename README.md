@@ -1,4 +1,8 @@
-# NVS Quasar Client
+### NSV Server
+
+[NVS server + this app](https://github.com/DandroidIT/nvs)
+
+# NVS-C (Quasar App)
 
 ## Install the dependencies
 
