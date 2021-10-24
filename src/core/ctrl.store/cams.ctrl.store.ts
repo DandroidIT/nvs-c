@@ -29,10 +29,19 @@ export const cams_ctrl_store = () => {
 
     }
 
-    const _getCam = (id: string) => {
+    const _getCam = async (id: string) => {
+        if (_cams.list === undefined)
+            await _getCams(true)
         const c = _cams.list?.find(cam => { return cam?.id == id })
-        if (c)
+        if (c) {
+            if (c.screeshots === undefined) {
+                c.screeshots = []
+                console.log('c.screeshots:', c.screeshots);
+
+                //_c.screeshots.push(image)
+            }
             return c
+        }
     }
 
     const _deleteCam = async (idcam: string) => {
@@ -48,6 +57,14 @@ export const cams_ctrl_store = () => {
             _state.msgError = resp.msg
         }
         _state.success = !resp.inError
+        const _c = await _getCam(id)
+        if (_c) {
+            if (cmdoption === 'live24') {
+                _c.liveH24 = resp.dataResult
+            } else if (cmdoption === 'livemotion') {
+                _c.motion = resp.dataResult
+            }
+        }
     }
 
     const _getScreenshot = async (id: string) => {

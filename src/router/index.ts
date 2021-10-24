@@ -37,14 +37,14 @@ export default (function (/* { store, ssrContext } */) {
   });
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  Router.beforeEach((to, from, next) => {
+  Router.beforeEach(async (to, from, next) => {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { userState } = AuthCS() //const userState = userAuth().userState
+    const { userState, isLogged } = AuthCS() //const userState = userAuth().userState
     //console.log('Router.beforeEach userState.isAuth:', userState.isAuth, 'userState.isAuthWss:', userState.isAuthWss);
     if (to.matched.some(record => record.meta.requiresAuth)) {
       //console.log('check userState.isAuth:', userState.isAuth, 'userState.isAuthWss:', userState.isAuthWss);
-      if (userState.isAuth === false || userState.isAuthWss === false) {
+      if (!await isLogged()) { //if (userState.isAuth === false || userState.isAuthWss === false) {
         //console.log('Router.beforeEach userState.isAuth:', userState.isAuth, 'userState.isAuthWss:', userState.isAuthWss);
         next({
           path: '/login',

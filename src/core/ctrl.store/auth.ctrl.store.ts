@@ -59,8 +59,13 @@ const _userDestroy = () => {
   apiWs.disconnect() //_wssClose()
 }
 
-void _checkAuth()
+//void _checkAuth()
 export const ctrl_store_Auth = () => {
+
+  const _isLogged = async () => {
+    await _checkAuth()
+    return _userState.isAuth && _userState.isAuthWss ? true : false
+  }
 
   const _updateUser = async (password: string, newUsername: string, newPassword: string) => {
     try {
@@ -105,7 +110,7 @@ export const ctrl_store_Auth = () => {
     userState: _userState,
     postLogin: _postLogin,
     postLogout: _postLogout,
-    updateUser: _updateUser
+    updateUser: _updateUser, isLogged: _isLogged
   }
 }
 

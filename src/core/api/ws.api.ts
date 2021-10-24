@@ -6,7 +6,6 @@ import { base } from '../setting';
 class apiWs {
   skt: websocket_wrapper = new websocket_wrapper()
   async connect(tokenAuth: string) {
-
     return new Promise<boolean>((res, rej) => {
       try {
         if (this.skt._isconnect) {

@@ -3,7 +3,7 @@
 
 import { reactive, ref, onMounted, onBeforeUnmount, readonly, computed } from 'vue';
 
-import { istate, icam } from '../interfaces';
+import { istate, icam, inameCamOption } from '../interfaces';
 import CamsCS from '../ctrl.store/cams.ctrl.store'
 import AuthCS from '../ctrl.store/auth.ctrl.store'
 import { QNotify } from '../quasar_element'
@@ -24,14 +24,17 @@ export const mCams = ( /* router?: Router -  props: any, context: SetupContext *
   const _player = reactive({ val: { destroy: () => undefined, volume: 10 } });
   const id = ref('')
   const _tab = ref('home');
-  let canvas: HTMLCanvasElement | null
-  let videocam: HTMLVideoElement | null
+  const _canvas = ref<HTMLCanvasElement>()
+  const _videocam = ref<HTMLVideoElement>()
+
   /* const _setup = () => {} */
 
-  onMounted(() => {
+  onMounted(async () => {
     const route = useRoute();
     id.value = route.params.id as string;
-    _cam.val = getCam(id.value)
+    _cam.val = await getCam(id.value)
+    await setOptions(id.value, 'live24', false, true)
+    await setOptions(id.value, 'livemotion', false, true)
     _loadPlayer(id.value)
   })
 
@@ -46,11 +49,9 @@ export const mCams = ( /* router?: Router -  props: any, context: SetupContext *
   });
 
   const _loadPlayer = (id: string) => {
-    canvas = document.getElementById('videostream') as HTMLCanvasElement;
-    videocam = document.getElementById('videocam') as HTMLVideoElement;
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
     _player.val = new JSMpeg.Player(urlplayer(id), {
-      canvas: canvas,
+      canvas: _canvas.value,
       protocols: userState.user?.token,
       onSourceEstablished: (/* source: any */) => {
         _initHtmlVideo()
@@ -64,20 +65,16 @@ export const mCams = ( /* router?: Router -  props: any, context: SetupContext *
 
   const _initHtmlVideo = () => {
     try {
-      if (canvas) {
+      if (_canvas.value && _videocam.value) {
         /*   const ctx = canvas.getContext('experimental-webgl')*/
         /* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
-        const stream = canvas.captureStream()
+        const stream = _canvas.value.captureStream()
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        if (videocam) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          videocam.srcObject = stream
-          canvas.style.display = 'none'
-          canvas.remove()
-        }
+        _videocam.value.srcObject = stream
+        //_canvas.value.style.display = 'none'
       }
     } catch (error) {
-
+      console.log('_initHtmlVideo error: ', error);
     }
 
 
@@ -90,7 +87,7 @@ export const mCams = ( /* router?: Router -  props: any, context: SetupContext *
         await document.exitPictureInPicture()
       } else {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        await videocam?.requestPictureInPicture()
+        await _videocam.value?.requestPictureInPicture()
       }
     } catch (error) {
       QNotify('Picture-in-Picture Web API is not supported')
@@ -114,7 +111,7 @@ export const mCams = ( /* router?: Router -  props: any, context: SetupContext *
     }
   };
 
-  const changeSetting = async (cmdoption: string, setdata: boolean) => {
+  const changeSetting = async (cmdoption: inameCamOption, setdata: boolean) => {
     _state.isawait = true
     await setOptions(id.value, cmdoption, setdata)
     _state.success = stateCamsCS.success
@@ -126,7 +123,7 @@ export const mCams = ( /* router?: Router -  props: any, context: SetupContext *
     }
     _state.isawait = false
   }
-  return { /* setup: _setup, */
+  return { /* setup: _setup, */ canvas: _canvas, videocam: _videocam,
     state: readonly(_state), tab: _tab,
     JSMpegPlayer: computed(() => _player.val),
     screenshots, cam: computed(() => _cam.val),

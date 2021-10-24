@@ -1,6 +1,14 @@
 <template>
   <q-layout>
     <q-page-container>
+      <q-dialog
+        v-model="state.isawait"
+        persistent
+        transition-show="scale"
+        transition-hide="scale"
+      >
+        <q-spinner-puff color="red" size="20em" />
+      </q-dialog>
       <q-page class="flex bg-image flex-center">
         <q-card
           v-bind:style="$q.screen.lt.sm ? { width: '80%' } : { width: '30%' }"

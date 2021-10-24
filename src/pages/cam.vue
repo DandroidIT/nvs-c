@@ -24,13 +24,19 @@
     </div>
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
       <video
+        ref="videocam"
         id="videocam"
         style=""
         class="full-width full-height"
         controls
         autoplay
       ></video>
-      <canvas class="full-width full-height" id="videostream"></canvas>
+      <canvas
+        style="display: none"
+        class="full-width full-height"
+        ref="canvas"
+        id="videostream"
+      ></canvas>
     </div>
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
       <q-item dense="">
@@ -168,19 +174,22 @@ export default defineComponent({
   components: { joyPad, presets },
   setup() {
     const {
-      state: state,
+      canvas,
+      videocam,
+      state,
       clickPiP,
       volume,
       tab,
       JSMpegPlayer,
       cam,
       screenshots,
-      getScreenshot,
       clickMove,
       changeSetting,
     } = mCams();
 
     return {
+      videocam,
+      canvas,
       state,
       volume,
       clickPiP,
@@ -188,7 +197,6 @@ export default defineComponent({
       JSMpegPlayer,
       cam: cam,
       screenshots,
-      getScreenshot,
       clickMove,
       changeSetting,
     };

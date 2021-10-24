@@ -28,8 +28,7 @@ class websocket_wrapper {
                     const { type, payload } = JSON.parse(msg.data)
                     this.dispatch(type, payload)
                 }
-                this.conn.onclose = (ev: CloseEvent) => {
-                    console.log('onclose the socket ev:', ev);
+                this.conn.onclose = (/* ev: CloseEvent */) => {
                     this._isconnect = false
                 }
             } catch (error) {

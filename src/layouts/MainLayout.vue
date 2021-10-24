@@ -3,13 +3,21 @@
     <!-- Be sure to play with the Layout demo on docs -->
 
     <!-- (Optional) The Header -->
-    <q-header elevated>
+    <q-header reveal elevated>
       <q-toolbar>
         <q-btn flat round dense icon="menu" @click="leftDrawer = !leftDrawer" />
         <q-toolbar-title>
           {{ appTitle }} <span class="text-caption"> {{ appVersion }}</span>
         </q-toolbar-title>
         <q-btn round flat icon="logout" @click="logout" />
+        <q-btn
+          round
+          dense
+          flat
+          color="white"
+          :icon="Qsr.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'"
+          @click="Qsr.fullscreen.toggle()"
+        ></q-btn>
       </q-toolbar>
     </q-header>
 
@@ -28,6 +36,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import { useQuasar } from 'quasar';
 import Menu from 'components/Menu.vue';
 import { base } from 'src/core/setting';
 import { useRouter } from 'vue-router';
@@ -36,6 +45,7 @@ export default defineComponent({
   name: 'LayoutMain',
   components: { Menu },
   setup() {
+    const Qsr = useQuasar();
     const appVersion = process.env.VERSION;
     const appTitle = base.title;
     const menuLink = base.menu;
@@ -46,7 +56,7 @@ export default defineComponent({
       await AuthCS().postLogout();
       void router.push({ path: '/login' });
     };
-    return { appVersion, appTitle, leftDrawer, menuLink, logout };
+    return { Qsr, appVersion, appTitle, leftDrawer, menuLink, logout };
   },
 });
 </script>

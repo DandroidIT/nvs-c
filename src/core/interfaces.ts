@@ -30,14 +30,14 @@ export type iresponseServer<T> = { inError: boolean; msg: string; dataResult: T 
 export type irespUser = { success: boolean, data?: iuser, error?: string }
 
 export type icam = {
-  id: string; information?: [string, any][], name: string; asPTZ?: boolean; inerror?: boolean,
+  id: string; information?: [string, any][], name: string; asPTZ?: boolean; inerror?: boolean, screeshots: string[],
   liveH24?: boolean, motion?: boolean, icon?: string, color?: string, color2?: string //arrAllarm: string[],
 }
 export type icamProbe = { urn: string; name: string; xaddrs: string[]; username: string; password: string, exist: boolean }
 
 export type icams = { list?: Array<icam>, cam?: icam }
 
-export type inameCamOption = 'live24' | 'livemotion' | 'delete' | 'altro' | string
+export type inameCamOption = 'live24' | 'livemotion' | 'delete' | 'altro'
 
 export type nameOptionsNvs = 'ipblock' | 'other';
 export type ialarmMethod = 'getAlarmCam' | 'getAlarmCamList' | 'getDayAndAlarmList' | 'getDayAndAlarmCount';

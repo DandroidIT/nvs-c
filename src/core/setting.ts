@@ -16,7 +16,7 @@ const base = {
   }, {
     title: 'Video Wall',
     caption: '',
-    icon: 'mdi-view-dashboard-outline',
+    icon: 'mdi-monitor-dashboard',
     link: '/videowall'
   }, {
     title: 'Calendar Alarms',
