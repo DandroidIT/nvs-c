@@ -1,5 +1,3 @@
-### NSV Server
-
 [NVS server + this app](https://github.com/DandroidIT/nvs)
 
 # NVS-C (Quasar App)
